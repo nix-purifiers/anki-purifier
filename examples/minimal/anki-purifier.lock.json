@@ -1,0 +1,40 @@
+{
+  "entries": [
+    {
+      "anki": {
+        "branch_index": 2,
+        "filename": "AnkiConnect.ankiaddon",
+        "id": 2055492159,
+        "max_point_version": 260800,
+        "min_point_version": 260800,
+        "mod_time": 1792032779
+      },
+      "hash": "sha256-RWpUb9nhv1OWLHBhj31y0QsXaGkM6I+lycaQmuXp4ew=",
+      "mirrors": [],
+      "path": "2055492159.ankiaddon",
+      "url": "https://ankiweb.net/svc/shared/download-addon/2055492159?t=1792032779&minpt=260800&maxpt=260800&bidx=2"
+    }
+  ],
+  "native": {
+    "metadata": {
+      "2055492159": {
+        "branch_index": 2,
+        "conflicts": [
+          "AnkiConnectDev"
+        ],
+        "max_point_version": 260800,
+        "min_point_version": 260800,
+        "mod": 1792032779,
+        "name": "Anki-Connect"
+      }
+    }
+  },
+  "purifier": "anki",
+  "sdk": "3d36353725536047ec0c1e824a25b8c9ffad8df03e0616ef9ae009741cf3de4d",
+  "selection": {
+    "addons": [
+      2055492159
+    ]
+  },
+  "version": 1
+}
