@@ -63,5 +63,18 @@ runCommand "anki-locked-addons" { } ''
   export PYTHONPATH=${driver}/hooks PYTHONPYCACHEPREFIX="$TMPDIR/python-cache"
   export ANKI_PURIFIER_HELPER=${driver}/anki_purifier_helper.py ANKI_PURIFIER_RESPONSE="$TMPDIR/response.json"
   ${original}/bin/anki --version > "$TMPDIR/native.log"
+  # Native Anki can serialize identical metadata with different key order.
+  # Canonicalize only its generated declared add-on metadata after installation.
+  ${python3}/bin/python -I - ${request} "$out" <<'PY_META'
+  import json
+  import sys
+  from pathlib import Path
+  request = json.loads(Path(sys.argv[1]).read_text())
+  for entry in request["entries"]:
+      path = Path(sys.argv[2]) / "addons" / str(entry["anki"]["id"]) / "meta.json"
+      native = json.loads(path.read_text())
+      path.write_text(json.dumps(native, sort_keys=True) + "\n")
+      assert json.loads(path.read_text()) == native
+  PY_META
   ln -s ${writeText "anki-lock.json" (builtins.toJSON checked.data)} "$out/lock.json"
 ''
