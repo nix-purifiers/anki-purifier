@@ -1,5 +1,6 @@
 {
   lib,
+  purifier,
   runCommand,
   python3,
   original,
@@ -17,6 +18,8 @@
   fetchers ? { },
   doCheck ? false,
   checkCommand ? "",
+  resourceRoots ? { },
+  resourceDependencies ? [ ],
 }:
 let
   lock = readLock { inherit src lockFile; };
@@ -42,7 +45,7 @@ let
         "output"
       ]);
   };
-  project = runCommand "anki-project" { } ''
+  builtProject = runCommand "anki-project" { } ''
     export ANKI_PURIFIER_ENVIRONMENT=${profile} ANKI_PURIFIER_ORIGINAL=${original}
     export ANKI_PURIFIER_HOOKS=${driver}/hooks ANKI_PURIFIER_CACHE=${emptyCache} ANKI_PURIFIER_FONTS=${fontConfig}
     export ANKI_PURIFIER_OUTPUT="$out" ANKI_PURIFIER_RUN_STATE="$TMPDIR/anki-run"
@@ -55,6 +58,17 @@ let
     ${python3}/bin/python ${driver}/anki_purifier_run_project.py
     ${lib.optionalString doCheck checkCommand}
   '';
+  projections = lib.optionalAttrs (resourceRoots != { }) (
+    purifier.resourceProjections {
+      producer = builtProject;
+      roots = resourceRoots;
+      dependencies = resourceDependencies;
+      inherit runCommand python3;
+    }
+  );
+  project = builtProject // {
+    inherit projections;
+  };
   release =
     runCommand "anki-project-release"
       {
@@ -75,6 +89,6 @@ in
     environment = profile;
   };
   tests = project;
-  inherit release;
+  inherit release projections;
   fetches = lock.entries;
 }
