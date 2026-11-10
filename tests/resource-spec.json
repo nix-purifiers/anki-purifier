@@ -1,0 +1,8 @@
+{
+  "name": "anki",
+  "builder": "Anki",
+  "roots": {
+    "notes.txt": "notes.txt"
+  },
+  "changedFile": "answer.json"
+}

@@ -79,6 +79,10 @@
           };
         in
         {
+          resource-projections = import ./tests/resource-projections.nix {
+            pkgs = pkgsFor system;
+            build = p.buildAnkiProject;
+          };
           cli = p.cli;
           inherit (build.packages) environment project;
           release = build.release;
